@@ -1,0 +1,18 @@
+{
+  "name": "neo4j-concurrent-transactions",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "purplemana <purplemana@protonmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "start": "babel-node src/index.js"
+  },
+  "dependencies": {
+    "neo4j-driver": "^1.7.2"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.3",
+    "babel-preset-env": "^1.7.0"
+  }
+}
