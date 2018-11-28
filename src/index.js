@@ -3,7 +3,13 @@ const neo4j = require("neo4j-driver");
 async function test() {
   const driver = neo4j.v1.driver(
     "bolt://localhost:6687",
-    neo4j.v1.auth.basic("api-server-test", "api-server-test")
+    neo4j.v1.auth.basic("api-server-test", "api-server-test"),
+    {
+      logging: {
+        level: "info",
+        logger: (level, message) => console.log(level + " " + message),
+      },
+    }
   );
 
   const sessionOne = driver.session();
@@ -13,7 +19,19 @@ async function test() {
   const transactionTwo = sessionTwo.beginTransaction();
 
   try {
-    await transactionOne.run(`MERGE (n:TestNode {id: $id})`, {id: "1"});
+    console.log("This executes :)");
+    await transactionOne.run(`MERGE (n:TestNode {id: $id}) RETURN n`, {id: "1"});
+    console.log("Yep! :)");
+
+    // Removing `return n` from the above query somehow doesn't hang the code.
+    // console.log("This executes too :?");
+    // await transactionOne.run(`MERGE (n:TestNode {id: $id})`, { id: "1" });
+
+    console.log("This doesn't :(");
+    console.log(
+      "And it also hangs the Neo4j server :((. Kill this process with `Ctrl+C` or `Cmd+.`"
+    );
+
     await transactionTwo.run(`CREATE CONSTRAINT ON (book:Book) ASSERT book.isbn IS UNIQUE`);
 
     await transactionOne.commit();
